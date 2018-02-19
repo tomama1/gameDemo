@@ -1,0 +1,300 @@
+
+<html>
+
+    <head>
+        <title>Game Night</title>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="js/pacman.js" type="text/javascript"></script>
+
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!--Import materialize.css-->
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <!--Let browser know website is optimized for mobile-->
+    
+    </head>
+    <body>
+        <div class="">
+<div id="row" >
+    <div id="container" class="col l6">
+        <div id="world"></div>
+        <div id="gamescore"></div>
+        <div id="pacman"></div>
+        <div class = "ghost" id="pinkghost"></div>
+        <div class = "ghost" id="blueghost"></div>
+        <div class = "ghost" id="purpleghost"></div>
+       <div id="startbutton"><br>
+            <button id="start">Game Start</button>
+        </div>
+    </div>
+
+<div id="blackjack" class="col l4">
+    <div id="header">
+            <h1>BlackJack</h1>
+        </div>
+    
+        <div id="dealershand">
+            Dealers hand
+        </div>
+    
+        <div id="playershand">
+            Players hand
+        </div>
+    
+        <button id="deal" onclick="deal()">
+            Deal
+        </button>
+    
+        <button id="hit" onclick="hit()">
+            Hit
+        </button>
+    
+        <button id="stay" onclick="stay()">
+            Stay
+        </button>
+    
+        <div id="result">
+        </div>
+    </div>
+</div>
+</div>
+    </body>
+
+
+<script>
+
+
+class Card{
+        constructor(number, suit){
+            this.number = number;
+            this.suit = suit;
+        }
+    }
+
+    class Deck{
+        constructor(){
+            this.cards = [];
+            this.init();
+        }
+        init() {
+            this.cards = [];
+            var suitdict = {1:"Clubs", 2: "Spades", 3: "Hearts", 4: "Diamonds"};
+            for(var i=1;i<=13;i++){
+                for(var k = 1; k<=4; k++){
+                    var tempcard = new Card(i,suitdict[k]);
+                    this.cards.push(tempcard);
+                }
+            }
+        }   
+    }
+
+    class Player{
+        constructor(name){
+            this.name = name;
+            this.hand = [];
+        }
+    }
+
+    Player.prototype.takeCard = function(card){
+        this.hand.push(card);
+        return this;
+    }
+
+    Player.prototype.discardCard = function(card){
+        for (rightcard in this.hand){
+            if ((card.suit == rightcard.suit) && (card.number == rightcard.number)){
+                this.hand.splice(rightcard, 1);
+            }
+        }
+        return this;
+    }
+
+    Player.prototype.reset = function(){
+        this.hand =[];
+        return this;
+    }
+    
+
+    Player.prototype.printHand = function(){
+        for (card in this.hand){
+            console.log(this.hand[card].number, this.hand[card].suit);
+        }
+    }
+
+
+    Deck.prototype.shuffle = function(){
+        for (let i = this.cards.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [this.cards[i], this.cards[j]] = [this.cards[j], this.cards[i]];
+        }
+        return this;
+    }
+
+    Deck.prototype.printDeck = function(){
+        for (card in this.cards){
+            console.log(this.cards[card].number, this.cards[card].suit);
+        }
+    }
+
+    Deck.prototype.reset = function(){
+        this.init();
+        return this;
+    }
+
+    Deck.prototype.dealCard = function(){
+        var topcard = this.cards[0];
+        this.cards.splice(0,1);
+        return topcard;
+    }
+
+    function endGame(){
+        document.getElementById("result").innerHTML = "You Bust!";
+        document.getElementById("hit").style.display="none";
+        document.getElementById("stay").style.display="none";
+        document.getElementById("deal").style.display="inline-block";
+    }
+    function dealerhit(){
+        var topc = deck.dealCard();
+        comp.takeCard(topc);
+        var imgtitle = findimgtitle(topc);
+        let seconddealercard = document.createElement("img");
+        seconddealercard.setAttribute('src', 'cardimg/'+imgtitle+'.png');
+        document.getElementById("dealershand").appendChild(seconddealercard);
+    }
+
+
+    function dealermove(){
+        var dealertotal = findTotal(comp);
+        while (dealertotal < 17){
+            dealerhit();
+            dealertotal = findTotal(comp);
+        }
+
+    }
+
+    function deal(){
+        document.getElementById("hit").style.display="inline-block";
+        document.getElementById("stay").style.display="inline-block";
+        document.getElementById("deal").style.display = "none";
+        deck.reset();
+        deck.shuffle();
+        p1.reset();
+        comp.reset();
+        document.getElementById("dealershand").innerHTML = "Dealers Hand";
+        document.getElementById("playershand").innerHTML = "Players Hand";
+
+        // deal first card to player
+        hit();
+        
+        // deal first card to dealer
+        dealerhit();
+
+        // deal second card
+        hit();
+
+        // deal second card to dealer
+        dealerhit();
+
+        // print the total
+        document.getElementById("result").innerHTML = "Your total is: "+findTotal(p1).toString();
+
+    }
+
+    function hit(){
+        var topc = deck.dealCard();
+        p1.takeCard(topc);
+        var imgtitle = findimgtitle(topc);
+        let hitcard = document.createElement("img");
+        hitcard.setAttribute('src', 'cardimg/'+imgtitle+'.png');
+        document.getElementById("playershand").appendChild(hitcard);
+        document.getElementById("result").innerHTML = "Your total is: "+findTotal(p1).toString();
+
+        if (findTotal(p1)>21){
+            endGame();
+        }
+    }
+
+    function stay(){
+        dealermove();
+        if (findTotal(comp) > 21){
+            document.getElementById("result").innerHTML = "Dealer Busts, You Win!";
+        }
+        else if (findTotal(comp) > findTotal(p1)){
+            document.getElementById("result").innerHTML = "Dealer Wins!";
+        }
+        else if (findTotal(comp) == findTotal(p1)){
+            document.getElementById("result").innerHTML = "It's a tie!";
+        }
+        else{
+            document.getElementById("result").innerHTML = "You Win!";
+        }
+        document.getElementById("hit").style.display="none";
+        document.getElementById("stay").style.display="none";
+        document.getElementById("deal").style.display="inline-block";
+    }
+
+    function findimgtitle(card){
+        var royals = {11: "j", 12: "q", 13: "k"};
+        var strbuilder = "";
+        if (card.suit == "Clubs"){
+            strbuilder+="c";
+        }
+        else if(card.suit == "Spades"){
+            strbuilder+="s";
+        }
+        else if(card.suit == "Hearts"){
+            strbuilder+="h";
+        }
+        else{
+            strbuilder+="d";
+        }
+
+        if (card.number <= 10){
+            strbuilder+= card.number.toString();
+            return strbuilder;
+        }
+        else{
+            strbuilder+=royals[card.number];
+            return strbuilder;
+        }
+    }
+
+    function findTotal(player){
+        var total = 0;
+        var numaces = 0;
+        for (card in player.hand){
+            if (player.hand[card].number == 1){
+                total += 11;
+                numaces++;
+            }
+            else if (player.hand[card].number>10){
+                total+=10;
+            }
+            else {
+                total+= player.hand[card].number;
+            }
+        }
+        while (numaces > 0){
+            if (total > 21){
+                total -= 10;
+                numaces --;
+            }
+            else{
+                break;
+            }
+        }
+        return total;
+    }
+
+
+
+    var p1 = new Player("Matthew");
+    var comp = new Player("Computer");
+    var deck = new Deck();
+    p1.printHand();
+
+</script>
+
+    </html>
+    

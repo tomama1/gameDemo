@@ -1,0 +1,124 @@
+* {
+    margin: 0px auto !important;
+    padding: 0px auto !important;
+}
+
+#row {
+    display: inline-block;
+    vertical-align: top;
+}
+
+
+#blackjack{
+display: inline-block;
+vertical-align: top;
+padding: 20px 20px 20px 20px;
+
+}
+#container{
+    display: inline-block;
+    text-align: center;
+    width: auto;
+    height: auto;
+    background-color: black;
+}
+.row {
+    height: 20px;
+    display: block;
+}
+#world {
+    display: inline-block;
+    text-align: center;
+    height: auto;
+    width: auto;
+}
+.cell{
+    display: inline-block;
+    background-color: blue;
+    height: 20px;
+    width: 20px;
+}
+div.coin{
+    background-image: url("../img/coin.gif");
+    background-size: 20px 20px;
+    background-position:center;
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+}
+div.cherry{
+    background-image: url("../img/cherry.png");
+    background-size: 20px 20px;
+    background-position:center;
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+}
+div#pacman{
+    background-image: url("../img/pacman.gif");
+    background-position:center;
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+div.ghost{
+    background-position:center;
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+div#blueghost{
+    background-image: url("../img/blueghost.gif");
+}
+div#pinkghost{
+    background-image: url("../img/pinkghost.gif");
+}
+div#purpleghost{
+    background-image: url("../img/purpleghost.gif");
+}
+div.empty{
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+}
+#gamescore{
+    border: 1px white solid;
+    color: white;
+    text-align: center;
+    font-size: 25px;
+    height: 50px;
+    width: 100px;
+    padding: 7px;
+}
+div.right90{
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+}
+#start {
+    color: black;
+}
+#clock{
+    border: 1px white solid;
+    color: white;
+    text-align: center;
+    font-size: 40px;
+    height: 50px;
+    width: 100px;
+    padding: 7px;
+}
+#stop {
+    color: white;
+}
